@@ -1,0 +1,350 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayes Theorem Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 20px 0;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .result h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .result-value {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .steps {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .steps ol {
+            padding-left: 20px;
+        }
+
+        .steps li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .example {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+
+        .example h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 Bayes Theorem Calculator</h1>
+        <p class="subtitle">Calculate conditional probabilities with step-by-step solutions</p>
+        
+        <div class="formula">
+            P(A|B) = P(B|A) × P(A) / P(B)
+        </div>
+
+        <div class="example">
+            <h4>💡 Example: Medical Test</h4>
+            <p>A disease affects 1% of the population. A test is 90% accurate for positive cases and 95% accurate for negative cases. If someone tests positive, what's the probability they actually have the disease?</p>
+        </div>
+
+        <div class="section">
+            <h3>📝 Define Your Problem</h3>
+            
+            <div class="input-group">
+                <label for="event-a">Event A (what you want to find the probability of):</label>
+                <input type="text" id="event-a" placeholder="e.g., Having the disease" value="Having the disease">
+            </div>
+            
+            <div class="input-group">
+                <label for="event-b">Event B (the observed evidence):</label>
+                <input type="text" id="event-b" placeholder="e.g., Testing positive" value="Testing positive">
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🔢 Enter Probabilities</h3>
+            
+            <div class="grid">
+                <div class="input-group">
+                    <label for="p-a">P(A) - Prior probability:</label>
+                    <input type="number" id="p-a" min="0" max="1" step="0.001" placeholder="0.01" value="0.01">
+                    <small>Probability of A happening before seeing evidence B</small>
+                </div>
+                
+                <div class="input-group">
+                    <label for="p-b-given-a">P(B|A) - Likelihood:</label>
+                    <input type="number" id="p-b-given-a" min="0" max="1" step="0.001" placeholder="0.90" value="0.90">
+                    <small>Probability of B happening when A is true</small>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="p-b-given-not-a">P(B|¬A) - Probability of B when A is false:</label>
+                <input type="number" id="p-b-given-not-a" min="0" max="1" step="0.001" placeholder="0.05" value="0.05">
+                <small>Probability of B happening when A is NOT true</small>
+            </div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculate()">🚀 Calculate P(A|B)</button>
+
+        <div id="result" class="result">
+            <h3>🎯 Results</h3>
+            <div id="result-value" class="result-value"></div>
+            <div id="steps" class="steps"></div>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            try {
+                // Get input values
+                const eventA = document.getElementById('event-a').value || 'A';
+                const eventB = document.getElementById('event-b').value || 'B';
+                const pA = parseFloat(document.getElementById('p-a').value);
+                const pBGivenA = parseFloat(document.getElementById('p-b-given-a').value);
+                const pBGivenNotA = parseFloat(document.getElementById('p-b-given-not-a').value);
+
+                // Validate inputs
+                if (isNaN(pA) || isNaN(pBGivenA) || isNaN(pBGivenNotA)) {
+                    throw new Error('Please enter valid numbers for all probability fields.');
+                }
+
+                if (pA < 0 || pA > 1 || pBGivenA < 0 || pBGivenA > 1 || pBGivenNotA < 0 || pBGivenNotA > 1) {
+                    throw new Error('All probabilities must be between 0 and 1.');
+                }
+
+                // Calculate P(¬A)
+                const pNotA = 1 - pA;
+
+                // Calculate P(B) using law of total probability
+                const pB = (pBGivenA * pA) + (pBGivenNotA * pNotA);
+
+                if (pB === 0) {
+                    throw new Error('P(B) cannot be zero. Check your input values.');
+                }
+
+                // Calculate P(A|B) using Bayes' theorem
+                const pAGivenB = (pBGivenA * pA) / pB;
+
+                // Display results
+                document.getElementById('result-value').innerHTML = 
+                    `P(${eventA} | ${eventB}) = ${(pAGivenB * 100).toFixed(2)}%`;
+
+                document.getElementById('steps').innerHTML = `
+                    <h4>📊 Step-by-Step Calculation:</h4>
+                    <ol>
+                        <li><strong>Given values:</strong>
+                            <ul>
+                                <li>P(${eventA}) = ${pA}</li>
+                                <li>P(${eventB} | ${eventA}) = ${pBGivenA}</li>
+                                <li>P(${eventB} | ¬${eventA}) = ${pBGivenNotA}</li>
+                            </ul>
+                        </li>
+                        <li><strong>Calculate P(¬${eventA}):</strong><br>
+                            P(¬${eventA}) = 1 - P(${eventA}) = 1 - ${pA} = ${pNotA.toFixed(4)}
+                        </li>
+                        <li><strong>Calculate P(${eventB}) using law of total probability:</strong><br>
+                            P(${eventB}) = P(${eventB}|${eventA}) × P(${eventA}) + P(${eventB}|¬${eventA}) × P(¬${eventA})<br>
+                            P(${eventB}) = ${pBGivenA} × ${pA} + ${pBGivenNotA} × ${pNotA.toFixed(4)} = ${pB.toFixed(4)}
+                        </li>
+                        <li><strong>Apply Bayes' theorem:</strong><br>
+                            P(${eventA}|${eventB}) = P(${eventB}|${eventA}) × P(${eventA}) / P(${eventB})<br>
+                            P(${eventA}|${eventB}) = ${pBGivenA} × ${pA} / ${pB.toFixed(4)} = ${pAGivenB.toFixed(4)}
+                        </li>
+                    </ol>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.2); border-radius: 8px;">
+                        <strong>🔍 Interpretation:</strong><br>
+                        Given that "${eventB}" occurred, there's a ${(pAGivenB * 100).toFixed(2)}% chance that "${eventA}" is true.
+                        ${pAGivenB > pA ? 
+                            `<br><br>📈 The evidence "${eventB}" <strong>increases</strong> the probability of "${eventA}" from ${(pA * 100).toFixed(2)}% to ${(pAGivenB * 100).toFixed(2)}%.` :
+                            `<br><br>📉 The evidence "${eventB}" <strong>decreases</strong> the probability of "${eventA}" from ${(pA * 100).toFixed(2)}% to ${(pAGivenB * 100).toFixed(2)}%.`
+                        }
+                    </div>
+                `;
+
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('error').style.display = 'none';
+
+            } catch (error) {
+                document.getElementById('error').textContent = error.message;
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('result').style.display = 'none';
+            }
+        }
+
+        // Load example on page load
+        window.onload = function() {
+            calculate();
+        };
+    </script>
+</body>
+</html>
